@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- Top half (red) -->
+  <path d="M50 5 A45 45 0 0 1 95 50 H62.5 A12.5 12.5 0 0 0 37.5 50 H5 A45 45 0 0 1 50 5Z" fill="#DC0A2D"/>
+  <!-- Bottom half (white) -->
+  <path d="M5 50 A45 45 0 0 0 95 50 H62.5 A12.5 12.5 0 0 1 37.5 50 H5Z" fill="#FFFFFF"/>
+  <!-- Center band (dark) -->
+  <rect x="5" y="47" width="90" height="6" rx="3" fill="#222"/>
+  <!-- Center circle (outer) -->
+  <circle cx="50" cy="50" r="14" fill="#222"/>
+  <!-- Center circle (white) -->
+  <circle cx="50" cy="50" r="10" fill="#FFFFFF"/>
+  <!-- Center dot -->
+  <circle cx="50" cy="50" r="5" fill="#222"/>
+  <!-- Outline -->
+  <circle cx="50" cy="50" r="45" fill="none" stroke="#222" stroke-width="4"/>
+</svg>

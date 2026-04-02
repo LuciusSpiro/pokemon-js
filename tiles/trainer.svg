@@ -1,0 +1,189 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <!-- 4x4 grid: columns = walk frames (stand, step-left, stand, step-right), rows = direction (down, left, right, up) -->
+  <!-- Each frame is 16x16 -->
+
+  <!-- === ROW 0: FACING DOWN === -->
+  <!-- Frame 0: Stand -->
+  <rect x="5" y="0" width="6" height="3" fill="#DC0A2D"/><!-- hat -->
+  <rect x="4" y="3" width="8" height="3" fill="#FFD5A0"/><!-- face -->
+  <rect x="6" y="4" width="1" height="1" fill="#333"/><!-- eye L -->
+  <rect x="9" y="4" width="1" height="1" fill="#333"/><!-- eye R -->
+  <rect x="4" y="6" width="8" height="5" fill="#3B4CCA"/><!-- shirt -->
+  <rect x="3" y="6" width="1" height="4" fill="#FFD5A0"/><!-- arm L -->
+  <rect x="12" y="6" width="1" height="4" fill="#FFD5A0"/><!-- arm R -->
+  <rect x="5" y="11" width="3" height="4" fill="#444"/><!-- leg L -->
+  <rect x="8" y="11" width="3" height="4" fill="#444"/><!-- leg R -->
+  <rect x="5" y="15" width="3" height="1" fill="#8B4513"/><!-- shoe L -->
+  <rect x="8" y="15" width="3" height="1" fill="#8B4513"/><!-- shoe R -->
+
+  <!-- Frame 1: Walk Left -->
+  <rect x="21" y="0" width="6" height="3" fill="#DC0A2D"/>
+  <rect x="20" y="3" width="8" height="3" fill="#FFD5A0"/>
+  <rect x="22" y="4" width="1" height="1" fill="#333"/>
+  <rect x="25" y="4" width="1" height="1" fill="#333"/>
+  <rect x="20" y="6" width="8" height="5" fill="#3B4CCA"/>
+  <rect x="19" y="7" width="1" height="3" fill="#FFD5A0"/>
+  <rect x="28" y="6" width="1" height="4" fill="#FFD5A0"/>
+  <rect x="20" y="11" width="3" height="3" fill="#444"/>
+  <rect x="25" y="11" width="3" height="4" fill="#444"/>
+  <rect x="19" y="14" width="3" height="1" fill="#8B4513"/>
+  <rect x="25" y="15" width="3" height="1" fill="#8B4513"/>
+
+  <!-- Frame 2: Stand (same as 0) -->
+  <rect x="37" y="0" width="6" height="3" fill="#DC0A2D"/>
+  <rect x="36" y="3" width="8" height="3" fill="#FFD5A0"/>
+  <rect x="38" y="4" width="1" height="1" fill="#333"/>
+  <rect x="41" y="4" width="1" height="1" fill="#333"/>
+  <rect x="36" y="6" width="8" height="5" fill="#3B4CCA"/>
+  <rect x="35" y="6" width="1" height="4" fill="#FFD5A0"/>
+  <rect x="44" y="6" width="1" height="4" fill="#FFD5A0"/>
+  <rect x="37" y="11" width="3" height="4" fill="#444"/>
+  <rect x="40" y="11" width="3" height="4" fill="#444"/>
+  <rect x="37" y="15" width="3" height="1" fill="#8B4513"/>
+  <rect x="40" y="15" width="3" height="1" fill="#8B4513"/>
+
+  <!-- Frame 3: Walk Right -->
+  <rect x="53" y="0" width="6" height="3" fill="#DC0A2D"/>
+  <rect x="52" y="3" width="8" height="3" fill="#FFD5A0"/>
+  <rect x="54" y="4" width="1" height="1" fill="#333"/>
+  <rect x="57" y="4" width="1" height="1" fill="#333"/>
+  <rect x="52" y="6" width="8" height="5" fill="#3B4CCA"/>
+  <rect x="51" y="6" width="1" height="4" fill="#FFD5A0"/>
+  <rect x="60" y="7" width="1" height="3" fill="#FFD5A0"/>
+  <rect x="53" y="11" width="3" height="4" fill="#444"/>
+  <rect x="56" y="11" width="3" height="3" fill="#444"/>
+  <rect x="53" y="15" width="3" height="1" fill="#8B4513"/>
+  <rect x="57" y="14" width="3" height="1" fill="#8B4513"/>
+
+  <!-- === ROW 1: FACING LEFT === -->
+  <rect x="5" y="16" width="5" height="3" fill="#DC0A2D"/>
+  <rect x="4" y="19" width="7" height="3" fill="#FFD5A0"/>
+  <rect x="5" y="20" width="1" height="1" fill="#333"/>
+  <rect x="4" y="22" width="7" height="5" fill="#3B4CCA"/>
+  <rect x="3" y="22" width="1" height="4" fill="#FFD5A0"/>
+  <rect x="5" y="27" width="3" height="4" fill="#444"/>
+  <rect x="8" y="27" width="2" height="4" fill="#444"/>
+  <rect x="5" y="31" width="3" height="1" fill="#8B4513"/>
+  <rect x="8" y="31" width="2" height="1" fill="#8B4513"/>
+
+  <!-- Frame 1 left walk -->
+  <rect x="21" y="16" width="5" height="3" fill="#DC0A2D"/>
+  <rect x="20" y="19" width="7" height="3" fill="#FFD5A0"/>
+  <rect x="21" y="20" width="1" height="1" fill="#333"/>
+  <rect x="20" y="22" width="7" height="5" fill="#3B4CCA"/>
+  <rect x="19" y="23" width="1" height="3" fill="#FFD5A0"/>
+  <rect x="20" y="27" width="3" height="3" fill="#444"/>
+  <rect x="24" y="27" width="2" height="4" fill="#444"/>
+  <rect x="19" y="30" width="3" height="1" fill="#8B4513"/>
+  <rect x="24" y="31" width="2" height="1" fill="#8B4513"/>
+
+  <!-- Frame 2 left stand -->
+  <rect x="37" y="16" width="5" height="3" fill="#DC0A2D"/>
+  <rect x="36" y="19" width="7" height="3" fill="#FFD5A0"/>
+  <rect x="37" y="20" width="1" height="1" fill="#333"/>
+  <rect x="36" y="22" width="7" height="5" fill="#3B4CCA"/>
+  <rect x="35" y="22" width="1" height="4" fill="#FFD5A0"/>
+  <rect x="37" y="27" width="3" height="4" fill="#444"/>
+  <rect x="40" y="27" width="2" height="4" fill="#444"/>
+  <rect x="37" y="31" width="3" height="1" fill="#8B4513"/>
+  <rect x="40" y="31" width="2" height="1" fill="#8B4513"/>
+
+  <!-- Frame 3 left walk -->
+  <rect x="53" y="16" width="5" height="3" fill="#DC0A2D"/>
+  <rect x="52" y="19" width="7" height="3" fill="#FFD5A0"/>
+  <rect x="53" y="20" width="1" height="1" fill="#333"/>
+  <rect x="52" y="22" width="7" height="5" fill="#3B4CCA"/>
+  <rect x="51" y="23" width="1" height="3" fill="#FFD5A0"/>
+  <rect x="54" y="27" width="2" height="4" fill="#444"/>
+  <rect x="52" y="27" width="3" height="3" fill="#444"/>
+  <rect x="54" y="31" width="2" height="1" fill="#8B4513"/>
+  <rect x="51" y="30" width="3" height="1" fill="#8B4513"/>
+
+  <!-- === ROW 2: FACING RIGHT === -->
+  <rect x="6" y="32" width="5" height="3" fill="#DC0A2D"/>
+  <rect x="5" y="35" width="7" height="3" fill="#FFD5A0"/>
+  <rect x="10" y="36" width="1" height="1" fill="#333"/>
+  <rect x="5" y="38" width="7" height="5" fill="#3B4CCA"/>
+  <rect x="12" y="38" width="1" height="4" fill="#FFD5A0"/>
+  <rect x="6" y="43" width="2" height="4" fill="#444"/>
+  <rect x="8" y="43" width="3" height="4" fill="#444"/>
+  <rect x="6" y="47" width="2" height="1" fill="#8B4513"/>
+  <rect x="8" y="47" width="3" height="1" fill="#8B4513"/>
+
+  <!-- Frame 1 right walk -->
+  <rect x="22" y="32" width="5" height="3" fill="#DC0A2D"/>
+  <rect x="21" y="35" width="7" height="3" fill="#FFD5A0"/>
+  <rect x="26" y="36" width="1" height="1" fill="#333"/>
+  <rect x="21" y="38" width="7" height="5" fill="#3B4CCA"/>
+  <rect x="28" y="39" width="1" height="3" fill="#FFD5A0"/>
+  <rect x="22" y="43" width="2" height="4" fill="#444"/>
+  <rect x="25" y="43" width="3" height="3" fill="#444"/>
+  <rect x="22" y="47" width="2" height="1" fill="#8B4513"/>
+  <rect x="26" y="46" width="3" height="1" fill="#8B4513"/>
+
+  <!-- Frame 2 right stand -->
+  <rect x="38" y="32" width="5" height="3" fill="#DC0A2D"/>
+  <rect x="37" y="35" width="7" height="3" fill="#FFD5A0"/>
+  <rect x="42" y="36" width="1" height="1" fill="#333"/>
+  <rect x="37" y="38" width="7" height="5" fill="#3B4CCA"/>
+  <rect x="44" y="38" width="1" height="4" fill="#FFD5A0"/>
+  <rect x="38" y="43" width="2" height="4" fill="#444"/>
+  <rect x="40" y="43" width="3" height="4" fill="#444"/>
+  <rect x="38" y="47" width="2" height="1" fill="#8B4513"/>
+  <rect x="40" y="47" width="3" height="1" fill="#8B4513"/>
+
+  <!-- Frame 3 right walk -->
+  <rect x="54" y="32" width="5" height="3" fill="#DC0A2D"/>
+  <rect x="53" y="35" width="7" height="3" fill="#FFD5A0"/>
+  <rect x="58" y="36" width="1" height="1" fill="#333"/>
+  <rect x="53" y="38" width="7" height="5" fill="#3B4CCA"/>
+  <rect x="60" y="39" width="1" height="3" fill="#FFD5A0"/>
+  <rect x="55" y="43" width="3" height="3" fill="#444"/>
+  <rect x="53" y="43" width="2" height="4" fill="#444"/>
+  <rect x="55" y="46" width="3" height="1" fill="#8B4513"/>
+  <rect x="53" y="47" width="2" height="1" fill="#8B4513"/>
+
+  <!-- === ROW 3: FACING UP === -->
+  <rect x="5" y="48" width="6" height="3" fill="#DC0A2D"/>
+  <rect x="4" y="51" width="8" height="3" fill="#6B3A1F"/><!-- hair back -->
+  <rect x="4" y="54" width="8" height="5" fill="#3B4CCA"/>
+  <rect x="3" y="54" width="1" height="4" fill="#FFD5A0"/>
+  <rect x="12" y="54" width="1" height="4" fill="#FFD5A0"/>
+  <rect x="5" y="59" width="3" height="4" fill="#444"/>
+  <rect x="8" y="59" width="3" height="4" fill="#444"/>
+  <rect x="5" y="63" width="3" height="1" fill="#8B4513"/>
+  <rect x="8" y="63" width="3" height="1" fill="#8B4513"/>
+
+  <!-- Frame 1 up walk -->
+  <rect x="21" y="48" width="6" height="3" fill="#DC0A2D"/>
+  <rect x="20" y="51" width="8" height="3" fill="#6B3A1F"/>
+  <rect x="20" y="54" width="8" height="5" fill="#3B4CCA"/>
+  <rect x="19" y="55" width="1" height="3" fill="#FFD5A0"/>
+  <rect x="28" y="54" width="1" height="4" fill="#FFD5A0"/>
+  <rect x="20" y="59" width="3" height="3" fill="#444"/>
+  <rect x="25" y="59" width="3" height="4" fill="#444"/>
+  <rect x="19" y="62" width="3" height="1" fill="#8B4513"/>
+  <rect x="25" y="63" width="3" height="1" fill="#8B4513"/>
+
+  <!-- Frame 2 up stand -->
+  <rect x="37" y="48" width="6" height="3" fill="#DC0A2D"/>
+  <rect x="36" y="51" width="8" height="3" fill="#6B3A1F"/>
+  <rect x="36" y="54" width="8" height="5" fill="#3B4CCA"/>
+  <rect x="35" y="54" width="1" height="4" fill="#FFD5A0"/>
+  <rect x="44" y="54" width="1" height="4" fill="#FFD5A0"/>
+  <rect x="37" y="59" width="3" height="4" fill="#444"/>
+  <rect x="40" y="59" width="3" height="4" fill="#444"/>
+  <rect x="37" y="63" width="3" height="1" fill="#8B4513"/>
+  <rect x="40" y="63" width="3" height="1" fill="#8B4513"/>
+
+  <!-- Frame 3 up walk -->
+  <rect x="53" y="48" width="6" height="3" fill="#DC0A2D"/>
+  <rect x="52" y="51" width="8" height="3" fill="#6B3A1F"/>
+  <rect x="52" y="54" width="8" height="5" fill="#3B4CCA"/>
+  <rect x="51" y="54" width="1" height="4" fill="#FFD5A0"/>
+  <rect x="60" y="55" width="1" height="3" fill="#FFD5A0"/>
+  <rect x="53" y="59" width="3" height="4" fill="#444"/>
+  <rect x="56" y="59" width="3" height="3" fill="#444"/>
+  <rect x="53" y="63" width="3" height="1" fill="#8B4513"/>
+  <rect x="57" y="62" width="3" height="1" fill="#8B4513"/>
+</svg>
