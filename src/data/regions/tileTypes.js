@@ -1,0 +1,31 @@
+export const T = {
+  GRASS: 0,
+  TALL_GRASS: 1,
+  TREE: 2,
+  PATH: 3,
+  WATER: 4,
+  BUILDING: 5,
+  GATE_N: 6,
+  GATE_E: 7,
+  GATE_S: 8,
+  GATE_W: 9,
+  GYM_DOOR: 10,
+  SIGN: 11,
+  FLOWER: 12,
+}
+
+export const TILE_META = {
+  [T.GRASS]:      { walkable: true,  encounter: false, bg: '#78C850', emoji: '' },
+  [T.TALL_GRASS]: { walkable: true,  encounter: true,  bg: '#4E8234', emoji: '🌿' },
+  [T.TREE]:       { walkable: false, encounter: false, bg: '#2D6A1E', emoji: '🌲' },
+  [T.PATH]:       { walkable: true,  encounter: false, bg: '#C8B878', emoji: '' },
+  [T.WATER]:      { walkable: false, encounter: false, bg: '#5078C0', emoji: '~', textColor: '#3860A0' },
+  [T.BUILDING]:   { walkable: false, encounter: false, bg: '#8B7355', emoji: '🏠' },
+  [T.GATE_N]:     { walkable: true,  encounter: false, bg: '#A08050', emoji: '▲', gate: 'north' },
+  [T.GATE_E]:     { walkable: true,  encounter: false, bg: '#A08050', emoji: '▶', gate: 'east' },
+  [T.GATE_S]:     { walkable: true,  encounter: false, bg: '#A08050', emoji: '▼', gate: 'south' },
+  [T.GATE_W]:     { walkable: true,  encounter: false, bg: '#A08050', emoji: '◀', gate: 'west' },
+  [T.GYM_DOOR]:   { walkable: true,  encounter: false, bg: '#DC0A2D', emoji: '⚔️', gymDoor: true },
+  [T.SIGN]:       { walkable: false, encounter: false, bg: '#C8B878', emoji: '📋' },
+  [T.FLOWER]:     { walkable: true,  encounter: false, bg: '#78C850', emoji: '🌸' },
+}
