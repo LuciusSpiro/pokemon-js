@@ -78,9 +78,9 @@
 }
 
 @keyframes grass-sway {
-  0%, 100% { transform: scaleY(1) scaleX(1); }
-  25% { transform: scaleY(0.95) scaleX(1.02); }
-  75% { transform: scaleY(1.02) scaleX(0.98); }
+  0%, 100% { transform: scaleY(1) scaleX(1); filter: brightness(1); }
+  25% { transform: scaleY(0.95) scaleX(1.02); filter: brightness(1.15); }
+  75% { transform: scaleY(1.02) scaleX(0.98); filter: brightness(1.05); }
 }
 
 @keyframes water-shimmer {

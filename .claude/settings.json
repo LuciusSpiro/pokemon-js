@@ -7,7 +7,10 @@
       "Bash(npx create-vite@latest:*)",
       "WebSearch",
       "WebFetch(domain:opengameart.org)",
-      "WebFetch(domain:flinkerflitzer.itch.io)"
+      "WebFetch(domain:flinkerflitzer.itch.io)",
+      "WebFetch(domain:luciusspiro.github.io)",
+      "Bash(gh api:*)",
+      "WebFetch(domain:bisaboard.bisafans.de)"
     ]
   }
 }
