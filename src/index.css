@@ -57,20 +57,33 @@
 
   /* Tile animations */
   .tile-tall-grass {
-    animation: grass-sway 2s ease-in-out infinite;
+    animation: grass-sway 1.8s ease-in-out infinite;
+  }
+
+  .tile-tall-grass:nth-child(odd) {
+    animation-delay: -0.9s;
   }
 
   .tile-water {
-    animation: water-shimmer 3s ease-in-out infinite;
+    animation: water-shimmer 2.5s ease-in-out infinite;
+  }
+
+  .tile-water:nth-child(3n) {
+    animation-delay: -0.8s;
+  }
+
+  .tile-water:nth-child(3n+1) {
+    animation-delay: -1.6s;
   }
 }
 
 @keyframes grass-sway {
-  0%, 100% { transform: scaleY(1); }
-  50% { transform: scaleY(0.92); }
+  0%, 100% { transform: scaleY(1) scaleX(1); }
+  25% { transform: scaleY(0.95) scaleX(1.02); }
+  75% { transform: scaleY(1.02) scaleX(0.98); }
 }
 
 @keyframes water-shimmer {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.85; }
+  0%, 100% { opacity: 1; filter: brightness(1); }
+  50% { opacity: 0.88; filter: brightness(1.1); }
 }
