@@ -10,6 +10,7 @@ import XPBar from '../ui/XPBar'
 
 export default function TrainerCard() {
   const { name, level, xp, badges, starterId } = usePlayerStore()
+  const resetProgress = usePlayerStore((s) => s.resetProgress)
   const caughtCount = usePokedexStore((s) => s.getCaughtCount())
   const completed = useChallengeStore((s) => s.completed)
   const [starterData, setStarterData] = useState(null)
@@ -91,6 +92,25 @@ export default function TrainerCard() {
               </div>
             ))}
           </div>
+        </div>
+
+        {/* Neues Spiel */}
+        <div className="border-t border-gray-700 pt-4 mt-4">
+          <button
+            onClick={() => {
+              if (window.confirm('Wirklich einen neuen Trainer starten? Dein gesamter Fortschritt geht verloren!')) {
+                resetProgress()
+                usePokedexStore.getState().reset()
+                useChallengeStore.getState().reset()
+                localStorage.removeItem('pokemon-academy-explore')
+                window.location.hash = '#/'
+                window.location.reload()
+              }
+            }}
+            className="w-full px-4 py-2 text-sm text-red-400 border border-red-900/50 rounded-lg hover:bg-red-900/20 transition-colors"
+          >
+            Neuen Trainer starten
+          </button>
         </div>
       </div>
     </div>

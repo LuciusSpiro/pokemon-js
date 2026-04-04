@@ -18,7 +18,7 @@ export default function StarterSelect() {
   // Redirect if no name or already has starter
   useEffect(() => {
     if (!name) navigate('/', { replace: true })
-    if (starterId) navigate('/map', { replace: true })
+    if (starterId) navigate('/explore', { replace: true })
   }, [name, starterId, navigate])
 
   useEffect(() => {
@@ -46,7 +46,7 @@ export default function StarterSelect() {
     if (!selected) return
     setStarter(selected.id)
     catchPokemon(selected.id, 0)
-    navigate('/map')
+    navigate('/explore')
   }
 
   if (loading) {

@@ -78,6 +78,17 @@ export default function Sidebar({ onNavigate }) {
           🌿 Erkunden
         </NavLink>
         <NavLink
+          to="/worldmap"
+          onClick={handleClick}
+          className={({ isActive }) =>
+            `block px-3 py-2 rounded-lg text-sm transition-colors ${
+              isActive ? 'bg-gray-700 text-white' : 'text-gray-400 hover:text-white'
+            }`
+          }
+        >
+          🗺 Weltkarte
+        </NavLink>
+        <NavLink
           to="/pokedex"
           onClick={handleClick}
           className={({ isActive }) =>

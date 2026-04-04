@@ -1,30 +1,18 @@
-import { useState, useCallback, useEffect } from 'react'
+import { useState, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useExploreStore } from '../../stores/useExploreStore'
 import { usePlayerStore } from '../../stores/usePlayerStore'
 import { usePokedexStore } from '../../stores/usePokedexStore'
-import { getRegion, getUnlockedRegions } from '../../data/regions/index'
-import { EASY_QUESTIONS, MEDIUM_QUESTIONS, HARD_QUESTIONS, EXPERT_QUESTIONS } from '../../data/encounterQuestions'
-import { CODE_CHALLENGES } from '../../data/encounterChallenges'
+import { getRegion } from '../../data/regions/index'
+import { getChallengeForPokemon } from '../../data/pokemonChallenges'
 import TileGrid from '../explore/TileGrid'
 import DPad from '../explore/DPad'
 import RegionHUD from '../explore/RegionHUD'
 import EncounterOverlay from '../explore/EncounterOverlay'
 import GateTransition from '../explore/GateTransition'
+import DarknessOverlay from '../explore/DarknessOverlay'
 import Notification from '../ui/Notification'
 import { useMovement } from '../../hooks/useMovement'
-
-// Question pool by region difficulty
-function getQuestionPool(regionId) {
-  if (regionId <= 2) return EASY_QUESTIONS
-  if (regionId <= 4) return MEDIUM_QUESTIONS
-  if (regionId <= 6) return HARD_QUESTIONS
-  return EXPERT_QUESTIONS
-}
-
-function pickRandom(arr) {
-  return arr[Math.floor(Math.random() * arr.length)]
-}
 
 function pickWeightedPokemon(pokemonList) {
   const totalWeight = pokemonList.reduce((sum, p) => sum + p.weight, 0)
@@ -41,10 +29,15 @@ export default function ExploreMap() {
   const { currentRegion, playerX, playerY, facing, isMoving, encounterPhase } =
     useExploreStore()
   const move = useExploreStore((s) => s.move)
+  const handleGate = useExploreStore((s) => s.handleGate)
+  const enterArena = useExploreStore((s) => s.enterArena)
   const startEncounter = useExploreStore((s) => s.startEncounter)
   const setEncounterPhase = useExploreStore((s) => s.setEncounterPhase)
-  const enterGate = useExploreStore((s) => s.enterGate)
+  const _getCurrentTiles = useExploreStore((s) => s._getCurrentTiles)
+
   const badges = usePlayerStore((s) => s.badges)
+  const isMightyBob = usePlayerStore((s) => s.isMightyBob)
+  const playerFlags = { ...(usePlayerStore((s) => s.flags) || {}), mightyBob: isMightyBob() }
   const isCaught = usePokedexStore((s) => s.isCaught)
 
   const [gateTransition, setGateTransition] = useState(null)
@@ -52,76 +45,108 @@ export default function ExploreMap() {
   const [blockedMessage, setBlockedMessage] = useState(null)
 
   const region = getRegion(currentRegion)
-  const unlockedRegions = getUnlockedRegions(badges)
   const inEncounter = encounterPhase !== 'none'
+
+  // Get the correct tile grid (supports maze steps)
+  const currentTiles = region ? _getCurrentTiles(region) : null
 
   const handleMove = useCallback(
     (direction) => {
       if (inEncounter || gateTransition) return
 
-      const result = move(direction)
+      const result = move(direction, badges, playerFlags)
       if (!result) return
 
+      // Blocked by barrier
+      if (result.type === 'blocked') {
+        setBlockedMessage(result.message)
+        setTimeout(() => setBlockedMessage(null), 2000)
+        return
+      }
+
+      // Wild encounter
       if (result.type === 'encounter') {
-        // Pick a wild Pokemon
-        const available = region.pokemon.filter((p) => !isCaught(p.id))
+        const available = region.pokemon?.filter((p) => !isCaught(p.id)) || []
         if (available.length === 0) {
           setNotification({ message: 'Alle Pokemon hier gefangen!', type: 'info' })
           return
         }
 
         const pokemon = pickWeightedPokemon(available)
-        const question =
-          pokemon.encounterType === 'code'
-            ? pickRandom(CODE_CHALLENGES)
-            : pickRandom(getQuestionPool(currentRegion))
+        const question = getChallengeForPokemon(pokemon.id)
+        if (question.type === 'code') {
+          pokemon.encounterType = 'code'
+        } else {
+          pokemon.encounterType = 'quiz'
+        }
 
         startEncounter(pokemon, question)
-        // Auto-advance from transition to intro
         setTimeout(() => setEncounterPhase('intro'), 400)
+        return
       }
 
+      // Gate transition
       if (result.type === 'gate') {
-        const gateDir = result.gate
-        const gateInfo = region.gates[gateDir]
-        if (!gateInfo) return
+        const gateResult = handleGate(result.gate, badges, playerFlags)
 
-        if (!unlockedRegions.includes(gateInfo.targetRegion)) {
-          setBlockedMessage('Dieser Weg ist versperrt! Besiege zuerst die Arena.')
+        if (gateResult.mazeReset) {
+          // Lost Woods wrong path
+          setNotification({ message: gateResult.message, type: 'warning' })
+          return
+        }
+
+        if (gateResult.stayInRegion) {
+          // Lost Woods correct step but stay in region (tiles change)
+          setNotification({ message: 'Der Wald veraendert sich...', type: 'info' })
+          return
+        }
+
+        if (!gateResult.success) {
+          setBlockedMessage(gateResult.message || 'Dieser Weg ist versperrt!')
           setTimeout(() => setBlockedMessage(null), 2000)
           return
         }
 
-        setGateTransition(gateInfo.targetRegion)
+        if (gateResult.mazeComplete) {
+          setNotification({ message: 'Du hast den Irrlichtwald durchquert!', type: 'success' })
+        }
+
+        // Normal transition
+        setGateTransition(gateResult.targetRegion)
+        setTimeout(() => setGateTransition(null), 2000)
+        return
+      }
+
+      // Arena entry (gym door)
+      if (result.type === 'arena') {
+        setGateTransition(result.arenaId)
         setTimeout(() => {
-          enterGate(gateDir)
+          enterArena(result.arenaId)
           setTimeout(() => setGateTransition(null), 600)
         }, 500)
+        return
       }
 
+      // Gym leader tile → battle
+      if (result.type === 'gymLeader') {
+        navigate(`/gym/${result.gymId}`)
+        return
+      }
+
+      // Legacy gym door (fallback)
       if (result.type === 'gym') {
         navigate(`/gym/${result.gymId}`)
+        return
       }
     },
-    [
-      inEncounter,
-      gateTransition,
-      move,
-      region,
-      currentRegion,
-      isCaught,
-      startEncounter,
-      setEncounterPhase,
-      enterGate,
-      unlockedRegions,
-      navigate,
-    ]
+    [inEncounter, gateTransition, move, region, currentRegion, badges, playerFlags, isCaught, startEncounter, setEncounterPhase, handleGate, enterArena, navigate]
   )
 
-  // Keyboard movement
   useMovement(handleMove, !inEncounter && !gateTransition)
 
-  if (!region) return <div className="text-center text-gray-400 py-12">Region nicht gefunden</div>
+  if (!region || !currentTiles) {
+    return <div className="text-center text-gray-400 py-12">Region nicht gefunden</div>
+  }
 
   return (
     <div className="h-full flex flex-col">
@@ -147,29 +172,36 @@ export default function ExploreMap() {
           style={{ aspectRatio: '20 / 15', maxHeight: '100%', maxWidth: '100%', margin: 'auto' }}
         >
           <TileGrid
-            tiles={region.tiles}
+            tiles={currentTiles}
             playerX={playerX}
             playerY={playerY}
             facing={facing}
             isMoving={isMoving}
           />
           <RegionHUD regionId={currentRegion} />
+
+          {/* Dark cave overlay */}
+          {region.dark && (
+            <DarknessOverlay
+              playerX={playerX}
+              playerY={playerY}
+              hasBadge={badges.includes(region.flashBadge || '')}
+              defaultRadius={region.darkRadius?.default || 2}
+              flashRadius={region.darkRadius?.withFlash || 5}
+            />
+          )}
         </div>
       </div>
 
-      {/* Controls hint (desktop) */}
+      {/* Controls hint */}
       <div className="hidden md:flex justify-center gap-4 mt-2 text-xs text-gray-600">
         <span>Pfeiltasten / WASD zum Bewegen</span>
-        <span>Hohes Gras = wilde Pokemon</span>
+        {region.regionType === 'arena' && <span>Finde den Arena-Leiter!</span>}
       </div>
 
-      {/* Mobile D-Pad */}
       <DPad onMove={handleMove} />
-
-      {/* Encounter Overlay */}
       <EncounterOverlay />
 
-      {/* Gate Transition */}
       {gateTransition && (
         <GateTransition
           targetRegionId={gateTransition}

@@ -97,16 +97,19 @@ export default function GymScreen() {
         })}
       </div>
 
-      {/* Gym Quiz Battle (coming in Phase 2) */}
+      {/* Gym Battle */}
       {challenges.length > 0 && completedCount === challenges.length && (
-        <div className="mt-6 p-4 border-2 border-dashed border-pokemon-yellow/30 rounded-lg text-center">
-          <p className="text-pokemon-yellow font-bold mb-2">
-            Alle Challenges geloest!
+        <Link
+          to={`/gym/${gymId}/battle`}
+          className="mt-6 block p-4 bg-gradient-to-r from-pokemon-red/20 to-pokemon-yellow/10 border-2 border-pokemon-red/50 rounded-lg text-center hover:border-pokemon-red transition-colors"
+        >
+          <p className="text-pokemon-yellow font-bold text-lg mb-1">
+            ⚔️ Arena-Kampf gegen {gym.leader}!
           </p>
           <p className="text-gray-400 text-sm">
-            Der Arena-Kampf gegen {gym.leader} wird bald freigeschaltet...
+            Alle Challenges geloest -- fordere den Arena-Leiter heraus!
           </p>
-        </div>
+        </Link>
       )}
     </div>
   )

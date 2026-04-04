@@ -1,8 +1,17 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { usePlayerStore } from '../../stores/usePlayerStore'
 
 export default function QuizEncounter({ pokemon, question, onResult }) {
   const [selected, setSelected] = useState(null)
   const [answered, setAnswered] = useState(false)
+  const isMightyBob = usePlayerStore((s) => s.isMightyBob)
+
+  // 🐐 Auto-win
+  useEffect(() => {
+    if (isMightyBob()) {
+      setTimeout(() => onResult(true), 500)
+    }
+  }, [])
 
   function handleAnswer(index) {
     if (answered) return

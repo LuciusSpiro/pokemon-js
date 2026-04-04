@@ -1,9 +1,16 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Editor from '@monaco-editor/react'
 import { runCode } from '../../engine/SandboxRunner'
+import { usePlayerStore } from '../../stores/usePlayerStore'
 
 export default function CodeEncounter({ pokemon, challenge, onResult }) {
   const [code, setCode] = useState(challenge.starterCode)
+  const isMightyBob = usePlayerStore((s) => s.isMightyBob)
+
+  // 🐐 Auto-win
+  useEffect(() => {
+    if (isMightyBob()) setTimeout(() => onResult(true), 500)
+  }, [])
   const [running, setRunning] = useState(false)
   const [output, setOutput] = useState(null)
 

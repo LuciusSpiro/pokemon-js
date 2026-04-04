@@ -1,75 +1,216 @@
 import { create } from 'zustand'
+import { getDamage, getMultiplier, getEffectivenessLabel } from '../utils/typeEffectiveness'
+
+const BASE_DAMAGE = 25
+const NO_POKEMON_DAMAGE = 15
+const LEADER_DAMAGE = 20
 
 export const useBattleStore = create((set, get) => ({
-  phase: 'idle', // idle | intro | question | playerAttack | opponentAttack | result | catch | victory | defeat
-  playerPokemon: null,
-  opponentPokemon: null,
-  currentQuestion: 0,
+  // Phase: idle|teamSelect|intro|question|selectAttack|playerAttack|opponentAttack|bossRound|victory|defeat
+  phase: 'idle',
+
+  // Player
+  playerHP: 100,
+  playerMaxHP: 100,
+  playerTeam: [],           // [{id, name, types, sprite, used: false}]
+  selectedAttackPokemon: null,
+
+  // Leader
+  leaderName: '',
+  leaderPokemon: [],        // [{id, name, types, sprite, hp, maxHp}]
+  currentLeaderPokemon: 0,
+
+  // Gym info
+  gymId: null,
+  badge: '',
+
+  // Questions
   questions: [],
+  bossChallenge: null,
+  currentQuestion: 0,
   correctCount: 0,
   log: [],
+  lastMultiplier: 1,
 
-  startBattle: (playerPokemon, opponentPokemon, questions) =>
+  // ---- Actions ----
+
+  initBattle: (gymId, leaderName, badge, leaderPokemonData, questions, bossChallenge) =>
     set({
-      phase: 'intro',
-      playerPokemon: { ...playerPokemon, hp: playerPokemon.maxHp },
-      opponentPokemon: { ...opponentPokemon, hp: opponentPokemon.maxHp },
-      currentQuestion: 0,
+      phase: 'teamSelect',
+      gymId,
+      leaderName,
+      badge,
+      leaderPokemon: leaderPokemonData.map((p) => ({
+        ...p,
+        hp: 100,
+        maxHp: 100,
+      })),
+      currentLeaderPokemon: 0,
       questions,
+      bossChallenge,
+      currentQuestion: 0,
       correctCount: 0,
-      log: [`Ein wilder ${opponentPokemon.name} erscheint!`],
+      playerHP: 100,
+      playerMaxHP: 100,
+      playerTeam: [],
+      selectedAttackPokemon: null,
+      log: [],
+      lastMultiplier: 1,
     }),
 
-  setPhase: (phase) => set({ phase }),
+  setTeam: (team) => {
+    const { leaderName } = get()
+    set({
+      playerTeam: team.map((p) => ({ ...p, used: false })),
+      phase: 'intro',
+      log: [`Arena-Leiter ${leaderName} fordert dich heraus!`],
+    })
+  },
 
-  showQuestion: () => set({ phase: 'question' }),
+  startFight: () => set({ phase: 'question' }),
+
+  selectAttackPokemon: (pokemon) => set({ selectedAttackPokemon: pokemon }),
 
   answerCorrect: () => {
-    const { opponentPokemon, questions, currentQuestion } = get()
-    const damage = questions[currentQuestion]?.damage || 25
-    const newHP = Math.max(opponentPokemon.hp - damage, 0)
+    const { leaderPokemon, currentLeaderPokemon, selectedAttackPokemon, playerTeam } = get()
+    const defender = leaderPokemon[currentLeaderPokemon]
+
+    let damage = NO_POKEMON_DAMAGE
+    let multiplier = 1
+    let attackLog = 'Richtige Antwort!'
+
+    if (selectedAttackPokemon) {
+      multiplier = getMultiplier(selectedAttackPokemon.types, defender.types)
+      damage = getDamage(BASE_DAMAGE, selectedAttackPokemon.types, defender.types)
+      const effLabel = getEffectivenessLabel(multiplier)
+
+      // Mark pokemon as used
+      const updatedTeam = playerTeam.map((p) =>
+        p.id === selectedAttackPokemon.id ? { ...p, used: true } : p
+      )
+
+      attackLog = `${selectedAttackPokemon.name} greift an! ${effLabel} (-${damage} HP)`
+      set({ playerTeam: updatedTeam })
+    } else {
+      attackLog = `Angriff ohne Pokemon! (-${damage} HP)`
+    }
+
+    const newHP = Math.max(defender.hp - damage, 0)
+    const updatedLeader = [...leaderPokemon]
+    updatedLeader[currentLeaderPokemon] = { ...defender, hp: newHP }
+
     set({
       phase: 'playerAttack',
-      opponentPokemon: { ...opponentPokemon, hp: newHP },
+      leaderPokemon: updatedLeader,
       correctCount: get().correctCount + 1,
-      log: [...get().log, 'Richtige Antwort! Dein Angriff trifft!'],
+      selectedAttackPokemon: null,
+      lastMultiplier: multiplier,
+      log: [...get().log, attackLog],
     })
+
     return newHP <= 0
   },
 
   answerWrong: () => {
-    const { playerPokemon } = get()
-    const damage = 20
-    const newHP = Math.max(playerPokemon.hp - damage, 0)
+    const { playerHP, leaderName } = get()
+    const newHP = Math.max(playerHP - LEADER_DAMAGE, 0)
     set({
       phase: 'opponentAttack',
-      playerPokemon: { ...playerPokemon, hp: newHP },
-      log: [...get().log, 'Falsche Antwort! Der Gegner greift an!'],
+      playerHP: newHP,
+      selectedAttackPokemon: null,
+      log: [...get().log, `Falsche Antwort! ${leaderName} greift an! (-${LEADER_DAMAGE} HP)`],
     })
     return newHP <= 0
   },
 
-  nextQuestion: () => {
-    const next = get().currentQuestion + 1
-    if (next >= get().questions.length) {
-      set({ phase: 'victory' })
-      return false
+  nextRound: () => {
+    const { leaderPokemon, currentLeaderPokemon, currentQuestion, questions, bossChallenge } = get()
+    const currentPoke = leaderPokemon[currentLeaderPokemon]
+
+    // Current leader pokemon defeated?
+    if (currentPoke.hp <= 0) {
+      const nextPoke = currentLeaderPokemon + 1
+      if (nextPoke >= leaderPokemon.length) {
+        // All leader pokemon defeated - boss round if available
+        if (bossChallenge) {
+          set({
+            phase: 'bossRound',
+            log: [...get().log, 'Finale Runde! Loese die Code-Challenge!'],
+          })
+          return
+        }
+        set({ phase: 'victory' })
+        return
+      }
+      set({
+        currentLeaderPokemon: nextPoke,
+        log: [...get().log, `${leaderPokemon[nextPoke].name} tritt an!`],
+      })
     }
-    set({ currentQuestion: next, phase: 'question' })
-    return true
+
+    // Next question
+    const nextQ = currentQuestion + 1
+    if (nextQ >= questions.length) {
+      // Out of questions - check if boss round
+      if (bossChallenge && leaderPokemon.some((p) => p.hp > 0)) {
+        set({
+          phase: 'bossRound',
+          log: [...get().log, 'Finale Runde! Loese die Code-Challenge!'],
+        })
+        return
+      }
+      // If leader still alive but no questions, player wins on points
+      set({ phase: 'victory' })
+      return
+    }
+
+    set({ currentQuestion: nextQ, phase: 'question' })
   },
 
-  addLog: (message) =>
-    set({ log: [...get().log, message] }),
+  bossSolved: () => {
+    // Boss challenge solved - defeat all remaining leader pokemon
+    const { leaderPokemon } = get()
+    const defeated = leaderPokemon.map((p) => ({ ...p, hp: 0 }))
+    set({
+      leaderPokemon: defeated,
+      phase: 'victory',
+      log: [...get().log, 'Code-Challenge geloest! Sieg!'],
+    })
+  },
+
+  bossFailed: () => {
+    // Leader heals a bit
+    const { leaderPokemon, currentLeaderPokemon } = get()
+    const updated = [...leaderPokemon]
+    const current = updated[currentLeaderPokemon] || updated[updated.length - 1]
+    const idx = updated.indexOf(current)
+    updated[idx] = { ...current, hp: Math.min(current.hp + 30, current.maxHp) }
+    set({
+      leaderPokemon: updated,
+      phase: 'bossRound',
+      log: [...get().log, 'Nicht ganz... Der Leader heilt sich! Versuche es nochmal.'],
+    })
+  },
+
+  setPhase: (phase) => set({ phase }),
+  addLog: (msg) => set({ log: [...get().log, msg] }),
 
   reset: () =>
     set({
       phase: 'idle',
-      playerPokemon: null,
-      opponentPokemon: null,
-      currentQuestion: 0,
+      playerHP: 100,
+      playerTeam: [],
+      selectedAttackPokemon: null,
+      leaderName: '',
+      leaderPokemon: [],
+      currentLeaderPokemon: 0,
+      gymId: null,
+      badge: '',
       questions: [],
+      bossChallenge: null,
+      currentQuestion: 0,
       correctCount: 0,
       log: [],
+      lastMultiplier: 1,
     }),
 }))

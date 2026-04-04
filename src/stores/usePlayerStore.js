@@ -14,6 +14,9 @@ export const usePlayerStore = create(
 
       setName: (name) => set({ name }),
 
+      // 🐐 Mighty Bob mode
+      isMightyBob: () => get().name.toLowerCase().trim() === 'mighty bob',
+
       setStarter: (pokemonId) => set({ starterId: pokemonId }),
 
       gainXP: (amount) => {

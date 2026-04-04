@@ -8,9 +8,10 @@ export default function RegionHUD({ regionId }) {
 
   if (!region) return null
 
-  const regionPokemonIds = region.pokemon.map((p) => p.id)
+  const regionPokemon = region.pokemon || []
+  const regionPokemonIds = regionPokemon.map((p) => p.id)
   const caughtInRegion = caught.filter((c) => regionPokemonIds.includes(c.pokemonId)).length
-  const totalInRegion = region.pokemon.length
+  const totalInRegion = regionPokemon.length
   const typeColor = TYPE_COLORS[region.type] || '#888'
 
   return (
@@ -21,9 +22,11 @@ export default function RegionHUD({ regionId }) {
       >
         {region.name}
       </div>
-      <div className="bg-gray-900/80 backdrop-blur-sm px-2 py-1 rounded text-xs text-gray-300">
-        {caughtInRegion}/{totalInRegion}
-      </div>
+      {totalInRegion > 0 && (
+        <div className="bg-gray-900/80 backdrop-blur-sm px-2 py-1 rounded text-xs text-gray-300">
+          {caughtInRegion}/{totalInRegion}
+        </div>
+      )}
     </div>
   )
 }

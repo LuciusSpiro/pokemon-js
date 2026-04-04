@@ -11,7 +11,7 @@ export default function StartScreen() {
   // If player already has a starter, go to map
   useEffect(() => {
     if (starterId) {
-      navigate('/map', { replace: true })
+      navigate('/explore', { replace: true })
     }
   }, [starterId, navigate])
 
